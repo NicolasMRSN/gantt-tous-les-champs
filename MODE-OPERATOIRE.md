@@ -80,9 +80,10 @@ Au chargement, vous devez voir :
 - le planning Gantt avec la barre d'outils (`Aujourd'hui`, `Ajuster`, `Sem`/`Mois`/`Trim`…) ;
 - éventuellement une notification **« Schéma initialisé (n tables, n colonnes) »** si le
   widget a dû créer des tables ou des colonnes ;
-- en cliquant sur une tâche, un panneau de détail à droite ; en le faisant défiler
-  jusqu'en bas, la section **« Tous les champs »** avec, dans une pastille, le **nombre
-  de colonnes détectées** dans `Tasks`.
+- en cliquant sur une tâche, un panneau de détail à droite : après Statut, Priorité,
+  Dates, Projet… **vos propres colonnes de `Tasks`**, une ligne chacune, avec le même
+  rendu. Le menu **`⚙ Champs`** (en haut de la liste de gauche) énumère toutes les
+  colonnes détectées avec leur type.
 
 Si le widget avait été ajouté sur une autre table que `Tasks` à l'étape 1 : dans le
 panneau de droite, onglet **Données** (*Data*), cliquez sur **Modifier la sélection des
@@ -151,10 +152,11 @@ Grist natives montrent un libellé plutôt qu'un numéro de ligne.
 
 C'est tout l'objet de cette version : ajoutez dans Grist **n'importe quelle colonne**
 (budget, client, référence marché, case à cocher, pièce jointe, formule…) de
-**n'importe quel type**. Elle apparaît dans la section « Tous les champs » :
+**n'importe quel type**. Elle apparaît dans le panneau de détail, à la suite des champs
+d'origine :
 
 - immédiatement à la prochaine ouverture du panneau si le widget vient d'être chargé,
-- sinon après un clic sur le bouton **`↻`** de la section (relecture du schéma).
+- sinon après **`⚙ Champs`** → **`↻ Relire les colonnes`** (relecture du schéma).
 
 Aucune configuration à faire dans le widget : le libellé, le type, les choix et
 leurs couleurs sont lus directement dans Grist.
@@ -166,26 +168,31 @@ leurs couleurs sont lus directement dans Grist.
 ### 4.1 Ouvrir une tâche
 
 Cliquez sur une tâche dans la **liste de gauche** ou sur sa **barre** dans le Gantt.
-Le panneau de détail s'ouvre à droite. Sa partie haute est celle du widget d'origine
-(titre, statut, priorité, dates, projet, assignés, progression, tags, dépendances).
-Faites défiler jusqu'à **« Tous les champs »**.
+Le panneau de détail s'ouvre à droite avec les propriétés du widget d'origine —
+Statut, Priorité, Dates, Projet, Parent, Couleur, Assignés, Temps & charge,
+Progression — puis, **à leur suite et avec le même rendu**, chacune de vos colonnes.
 
-### 4.2 La section « Tous les champs »
+### 4.2 Vos colonnes dans le panneau
 
-Une ligne par colonne de `Tasks`, dans l'ordre des colonnes du document. Chaque ligne
-montre le **libellé Grist**, un badge de **type** (`TEXT`, `CHOICE`, `REF:PROJECTS`…),
-l'identifiant, l'éditeur adapté au type et une étoile `☆`/`★` (voir 4.4).
+Chaque colonne de `Tasks` que le panneau n'édite pas déjà est une ligne de plus dans
+sa liste de propriétés, dans l'ordre des colonnes du document : le **libellé Grist**
+en capitales, une icône selon le type, l'éditeur adapté (voir 4.3) et, à droite du
+libellé, une étoile `★` d'épinglage (voir 4.4). Une colonne formule porte un `ƒ` ;
+survolez-le pour lire la formule.
 
-Barre d'outils de la section :
+Les champs déjà édités par le panneau (titre, description, statut, priorité, dates,
+projet, assignés, dépendances, tags, estimation, temps passé, progression, couleur,
+parent) **ne sont pas affichés une seconde fois**.
+
+Les commandes liées aux colonnes sont dans le menu **`⚙ Champs`**, en haut de la
+liste de gauche :
 
 | Commande | Effet |
 |---|---|
-| **Filtrer…** | ne montre que les champs dont le libellé, l'identifiant ou le type contient le texte saisi |
-| **Masquer les vides** | cache les champs non renseignés pour cette tâche |
-| **Champs en plus** | cache les champs déjà édités dans la partie haute du panneau, pour ne voir que *vos* colonnes |
-| **`↻`** | relit la liste des colonnes dans Grist (après en avoir ajouté, renommé ou retypé une) |
-| **`⤓ CSV`** | exporte les tâches actuellement visibles avec toutes leurs colonnes (voir 4.5) |
-| **`▼` Tous les champs** (le titre) | un clic replie / déplie la section (mémorisé dans le navigateur) |
+| cases à cocher | épingle une colonne dans la liste et l'info-bulle (voir 4.4) |
+| **Masquer les champs vides** | le panneau ne montre que les colonnes renseignées pour la tâche ouverte |
+| **`↻ Relire les colonnes`** | relit la liste des colonnes dans Grist (après en avoir ajouté, renommé ou retypé une) |
+| **`⤓ Export CSV`** | exporte les tâches actuellement visibles avec toutes leurs colonnes (voir 4.5) |
 
 ### 4.3 Modifier une valeur
 
@@ -198,30 +205,31 @@ confirme. Selon le type :
 | `Text` | champ texte, ou zone multiligne si le contenu est long | les URL `http(s)://` deviennent cliquables |
 | `Numeric`, `Int` | champ numérique | |
 | `Bool` | case à cocher | écrit immédiatement au clic |
-| `Date` | sélecteur de date | stocké comme Grist (jour UTC) |
+| `Date` | sélecteur de date, même habillage que la ligne « Dates » | stocké comme Grist (jour UTC) |
 | `DateTime` | sélecteur date + heure | |
-| `Choice` | liste déroulante des choix de la colonne | couleur du choix reprise de Grist |
-| `ChoiceList` | puces + menu à cocher | saisie libre d'une nouvelle valeur possible |
+| `Choice` | pastille de couleur + liste déroulante, comme la ligne « Projet » | couleur du choix reprise de Grist |
+| `ChoiceList` | puces (comme les tags) + menu **`+ Ajouter`** à cocher | dernière ligne du menu : saisie libre d'une nouvelle valeur, validée par `Entrée` |
 | `Ref:<Table>` | liste déroulante des enregistrements de la table cible | libellé = colonne d'affichage (*Show column*) définie dans Grist |
-| `RefList:<Table>` | puces + menu à cocher | idem |
+| `RefList:<Table>` | puces + menu **`+ Lier`** à cocher, comme la ligne « Assignés » | `×` sur une puce pour retirer |
 | `Attachments` | liste des pièces jointes avec lien de téléchargement | **lecture seule** |
 | colonne **formule** | valeur en lecture seule, formule visible en survolant le `ƒ` | c'est Grist qui calcule |
 | valeur en **erreur** | affichée telle quelle (`⚠ ZeroDivisionError`) | jamais masquée |
 | autre type | valeur brute, éditable en JSON | aucun type ne bloque l'affichage |
 
-**Nouvelle tâche** : sur une tâche pas encore enregistrée, la section invite à créer
-la tâche d'abord (bouton du panneau d'origine). Les colonnes supplémentaires
-deviennent éditables dès que l'enregistrement existe.
+**Nouvelle tâche** : sur une tâche pas encore enregistrée, une ligne « Autres champs »
+indique le nombre de colonnes supplémentaires ; créez la tâche (bouton du panneau
+d'origine), rouvrez-la, et elles sont éditables.
 
 ### 4.4 Épingler des champs dans la liste et l'info-bulle
 
 Pour voir une information sans ouvrir le panneau :
 
-- cliquez sur l'étoile **★** à droite du libellé d'un champ dans « Tous les champs », **ou**
+- cliquez sur l'étoile **★** à droite du libellé d'un champ dans le panneau, **ou**
 - cliquez sur **`⚙ Champs`** en haut de la liste de gauche et cochez les colonnes voulues.
 
-Les champs épinglés apparaissent en **petites puces sous le nom de chaque tâche** et
-dans l'**info-bulle** au survol des barres du Gantt.
+Les champs épinglés apparaissent **sur la ligne de chaque tâche**, à côté des dates
+(tronqués si la place manque : survolez pour lire le détail complet) et dans
+l'**info-bulle** au survol des barres du Gantt.
 
 Ce choix est enregistré dans **votre navigateur** (`localStorage`), jamais dans le
 document : chaque utilisateur a sa propre sélection, et elle ne suit pas d'un poste à
@@ -229,7 +237,7 @@ l'autre.
 
 ### 4.5 Exporter en CSV
 
-Le bouton **`⤓ CSV`** télécharge `taches-tous-les-champs.csv` contenant :
+**`⚙ Champs`** → **`⤓ Export CSV`** télécharge `taches-tous-les-champs.csv` contenant :
 
 - les tâches **actuellement visibles** (filtres projet / priorité / assigné et niveau
   de hiérarchie respectés),
@@ -242,8 +250,9 @@ Le bouton **`⤓ CSV`** télécharge `taches-tous-les-champs.csv` contenant :
 ### 4.6 Droits en lecture seule
 
 Si votre rôle sur le document est **Lecteur** (*Viewer*), le widget affiche le bandeau
-« lecture seule » du widget d'origine et tous les éditeurs de « Tous les champs » sont
-désactivés. L'affichage, le filtre, l'épinglage et l'export CSV restent disponibles.
+« lecture seule » du widget d'origine et les éditeurs de vos colonnes sont désactivés
+(les listes à puces s'affichent sans `×` ni bouton d'ajout). L'affichage, l'épinglage
+et l'export CSV restent disponibles.
 
 ---
 
@@ -301,8 +310,9 @@ dans Grist.
 | Symptôme | Cause probable | Que faire |
 |---|---|---|
 | Le widget reste vide ; un encart dans le panneau de droite parle d'accès | Le niveau d'accès n'est pas « complet » ou n'a pas été accepté | Panneau de droite → **Niveau d'accès** → *Accès complet au document* → **Accepter** |
-| « Tous les champs » affiche des éditeurs génériques, sans libellés ni choix | Les métadonnées ne sont pas lisibles (accès insuffisant ou instance ancienne) | Vérifier le niveau d'accès. Le widget fonctionne en mode dégradé : les colonnes sont déduites des données |
-| Une colonne ajoutée dans Grist n'apparaît pas | Le schéma a été lu avant l'ajout | Cliquer sur **`↻`** dans la section, ou fermer/rouvrir la tâche |
+| Vos colonnes s'affichent avec des éditeurs génériques, sans libellés ni choix | Les métadonnées ne sont pas lisibles (accès insuffisant ou instance ancienne) | Vérifier le niveau d'accès. Le widget fonctionne en mode dégradé : les colonnes sont déduites des données |
+| Une colonne ajoutée dans Grist n'apparaît pas | Le schéma a été lu avant l'ajout | **`⚙ Champs`** → **`↻ Relire les colonnes`**, ou fermer/rouvrir la tâche |
+| Le panneau ne montre pas une colonne pourtant présente | « Masquer les champs vides » est actif et la colonne est vide pour cette tâche | Décocher l'option dans **`⚙ Champs`** |
 | Le Gantt affiche « Aucune tâche à planifier » alors que `Tasks` est remplie | `titre`, `dateDebut` ou `dateEcheance` manquants ou du mauvais type | Vérifier ces trois colonnes (Text, Date, Date). Une tâche sans dates n'est pas dessinée |
 | Bandeau « lecture seule », éditeurs grisés | Rôle Lecteur sur le document | Demander le rôle Éditeur au propriétaire du document |
 | Le widget n'affiche que des données de démonstration | Le widget est ouvert **hors** de Grist (page de démo, fichier local) | Normal : dans Grist, ce sont vos données qui s'affichent |
@@ -323,7 +333,7 @@ dans Grist.
 - Les écritures dans le document sont celles que vous déclenchez (modification d'un
   champ, déplacement d'une barre, création/suppression d'une tâche), plus, au premier
   lancement, la création des tables/colonnes manquantes décrite au § 3.
-- Les préférences (champs épinglés, filtres de la section) restent dans le
+- Les préférences (champs épinglés, option « masquer les vides ») restent dans le
   `localStorage` du navigateur.
 
 ---

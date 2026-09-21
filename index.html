@@ -73,7 +73,8 @@ td code { white-space:normal; }
   <p class="chapeau">Le planning de TaskFlow, mais le panneau de détail ne montre plus
   une liste de champs décidée à l'avance : il montre <b>vos colonnes</b>, toutes,
   telles qu'elles sont dans votre table <code>Tasks</code> — quel que soit leur
-  nombre, quel que soit leur type.</p>
+  nombre, quel que soit leur type — à la suite des champs d'origine et avec le même
+  rendu qu'eux.</p>
 
   <div class="tags">
     <span class="tag">Aucune colonne codée en dur</span>
@@ -102,8 +103,8 @@ td code { white-space:normal; }
   <h2>Démonstration</h2>
   <p>Ci-dessous, le widget hors de Grist : il se rabat sur un jeu d'exemple auquel on a
   ajouté des colonnes de tous types (texte long, nombre, booléen, choix, liste de choix,
-  référence, date, date-heure, lien, colonne formule). <b>Cliquez sur une tâche</b>, puis
-  faites défiler le panneau jusqu'à « Tous les champs ».</p>
+  référence, date, date-heure, lien, colonne formule). <b>Cliquez sur une tâche</b> : ces
+  colonnes apparaissent dans le panneau à la suite de Statut, Priorité, Dates, Projet…</p>
   <div class="demo">
     <div class="demo-barre"><span class="pastille"></span> démonstration — les modifications restent dans votre navigateur</div>
     <iframe src="widget/" title="Démonstration du widget Gantt — tous les champs" loading="lazy"></iframe>
@@ -112,15 +113,15 @@ td code { white-space:normal; }
   <h2>Ce que ça ajoute</h2>
   <div class="grille">
     <div class="carte">
-      <h3>Section « Tous les champs »</h3>
-      <p>Une ligne par colonne réellement présente dans <code>Tasks</code>, avec son
-      libellé Grist, son type, et l'éditeur qui va avec. Filtre par nom, masquage des
-      champs vides, masquage des champs déjà édités plus haut.</p>
+      <h3>Vos colonnes, comme les champs d'origine</h3>
+      <p>Chaque colonne de <code>Tasks</code> que le panneau n'édite pas déjà devient
+      une ligne de plus dans sa liste de propriétés : même libellé, même icône, même
+      contrôle que Statut, Dates ou Projet. Aucun doublon, aucune section à part.</p>
     </div>
     <div class="carte">
       <h3>Champs dans la liste</h3>
-      <p>L'étoile ★ d'un champ — ou le bouton <b>⚙ Champs</b> au-dessus de la liste —
-      l'affiche en puce sous le nom de chaque tâche et dans l'info-bulle de sa barre.</p>
+      <p>L'étoile ★ d'un champ — ou le menu <b>⚙ Champs</b> au-dessus de la liste —
+      affiche sa valeur sur la ligne de chaque tâche et dans l'info-bulle de sa barre.</p>
     </div>
     <div class="carte">
       <h3>Export CSV complet</h3>
@@ -129,8 +130,8 @@ td code { white-space:normal; }
     </div>
     <div class="carte">
       <h3>Colonnes ajoutées en cours de route</h3>
-      <p>Une colonne créée dans Grist pendant que le widget est ouvert ? Le bouton
-      <code>↻</code> relit le schéma. Aucune configuration à tenir à jour.</p>
+      <p>Une colonne créée dans Grist pendant que le widget est ouvert ? <b>⚙ Champs</b>
+      → <code>↻ Relire les colonnes</code>. Aucune configuration à tenir à jour.</p>
     </div>
   </div>
 
@@ -146,8 +147,8 @@ td code { white-space:normal; }
       manquantes sont ajoutées ; vos colonnes à vous sont conservées et détectées.
       Le Gantt a seulement besoin de <code>titre</code>, <code>dateDebut</code> et
       <code>dateEcheance</code> pour dessiner les barres.</li>
-    <li><b>Ouvrir une tâche</b>, faire défiler jusqu'à <i>Tous les champs</i>, modifier.
-      L'écriture part dans Grist quand le champ est validé ou quitté.</li>
+    <li><b>Ouvrir une tâche</b> : vos colonnes sont dans le panneau, à la suite des
+      champs d'origine. L'écriture part dans Grist quand le champ est validé ou quitté.</li>
     <li><b>Épingler ce qui compte</b> avec ★ pour le voir dans la liste et l'info-bulle
       sans ouvrir le panneau.</li>
   </ol>
@@ -162,12 +163,12 @@ td code { white-space:normal; }
     <tr><td><code>Text</code></td><td>champ texte, zone multiligne si le contenu est long, URL cliquable</td></tr>
     <tr><td><code>Numeric</code>, <code>Int</code></td><td>champ numérique</td></tr>
     <tr><td><code>Bool</code></td><td>case à cocher</td></tr>
-    <tr><td><code>Date</code></td><td>sélecteur de date (secondes UTC, comme Grist)</td></tr>
+    <tr><td><code>Date</code></td><td>sélecteur de date, même habillage que la ligne « Dates » (secondes UTC, comme Grist)</td></tr>
     <tr><td><code>DateTime</code></td><td>sélecteur date + heure</td></tr>
-    <tr><td><code>Choice</code></td><td>liste déroulante des choix de la colonne, avec leur couleur</td></tr>
-    <tr><td><code>ChoiceList</code></td><td>puces + menu à cocher, saisie libre possible</td></tr>
+    <tr><td><code>Choice</code></td><td>pastille de couleur + liste déroulante, comme la ligne « Projet »</td></tr>
+    <tr><td><code>ChoiceList</code></td><td>puces (comme les tags) + menu <code>+ Ajouter</code>, saisie libre possible</td></tr>
     <tr><td><code>Ref:&lt;Table&gt;</code></td><td>liste des enregistrements, libellé pris sur la colonne « SHOW COLUMN »</td></tr>
-    <tr><td><code>RefList:&lt;Table&gt;</code></td><td>puces + menu à cocher</td></tr>
+    <tr><td><code>RefList:&lt;Table&gt;</code></td><td>puces + menu <code>+ Lier</code>, comme la ligne « Assignés »</td></tr>
     <tr><td><code>Attachments</code></td><td>liste des pièces jointes avec lien de téléchargement (lecture seule)</td></tr>
     <tr><td>colonne <b>formule</b></td><td>valeur en lecture seule, formule en info-bulle sur le <code>ƒ</code></td></tr>
     <tr><td>valeur en <b>erreur</b></td><td>affichée telle quelle (<code>⚠ ZeroDivisionError</code>), jamais masquée</td></tr>

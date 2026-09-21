@@ -1,73 +1,69 @@
 
         /* ═══════════════════════════════════════════════════════════════════════
          * « TOUS LES CHAMPS » — extension additive au Gantt TaskFlow
+         * Les colonnes supplémentaires réutilisent le balisage et les styles natifs
+         * du panneau (.prop-row, .prop-label, .form-input, .form-select,
+         * .dates-inline, .multi-select, .addbtn, .tag-chip, .multi-select-chip).
+         * Les règles ci-dessous ne couvrent que ce que l'amont ne fournit pas.
          * Aucune règle existante n'est modifiée : tout est préfixé .af-
          * ═══════════════════════════════════════════════════════════════════════ */
-        .af-section { border-top: 1px solid var(--border); margin-top: 14px; padding-top: 14px; }
-        .af-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-        .af-title { font-size: 0.78rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
-        .af-title .af-caret { transition: transform .15s; font-size: 0.7rem; color: var(--text-muted); }
-        .af-section.af-collapsed .af-title .af-caret { transform: rotate(-90deg); }
-        .af-section.af-collapsed .af-body { display: none; }
-        .af-count { background: var(--primary-light); color: var(--primary); border-radius: 10px; padding: 1px 7px; font-size: 0.68rem; font-weight: 700; }
-        .af-tools { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-        .af-search { width: 132px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 7px; font-size: 0.74rem; background: var(--card-bg); color: var(--text); }
-        .af-search:focus { outline: none; border-color: var(--primary); }
-        .af-mini { padding: 5px 9px; border: 1px solid var(--border); border-radius: 7px; background: var(--card-bg); font-size: 0.7rem; font-weight: 600; cursor: pointer; color: var(--text-muted); white-space: nowrap; }
-        .af-mini:hover { border-color: var(--primary); color: var(--primary); }
-        .af-mini.on { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
 
-        .af-field { padding: 7px 0; border-bottom: 1px dashed var(--border); }
-        .af-field:last-child { border-bottom: none; }
-        .af-flabel { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
-        .af-fname { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); }
-        .af-ftype { font-size: 0.6rem; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--text-light); background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 1px 5px; }
-        .af-fcol { font-size: 0.6rem; color: var(--text-light); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-        .af-fx { font-size: 0.62rem; font-weight: 700; color: #7c3aed; background: #f3e8ff; border-radius: 5px; padding: 1px 5px; cursor: help; }
-        .af-star { margin-left: auto; cursor: pointer; font-size: 0.78rem; color: var(--text-light); line-height: 1; }
-        .af-star:hover { color: var(--warning); }
-        .af-star.on { color: var(--warning); }
+        /* Libellé : même style que les champs natifs, plus l'étoile d'épinglage à droite */
+        .af-row .prop-label { display: flex; align-items: center; gap: 6px; }
+        .af-star { margin-left: auto; cursor: pointer; font-size: 0.8rem; line-height: 1; color: var(--border-dark); text-transform: none; letter-spacing: 0; transition: color .15s; }
+        .af-star:hover, .af-star.on { color: var(--warning); }
+        .af-fx { font-size: 0.7rem; font-weight: 700; color: #7c3aed; cursor: help; text-transform: none; letter-spacing: 0; }
 
-        .af-in { width: 100%; padding: 7px 9px; border: 1px solid var(--border); border-radius: 7px; font-size: 0.8rem; background: var(--card-bg); color: var(--text); font-family: inherit; }
-        .af-in:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
-        .af-in:disabled { background: var(--bg); color: var(--text-muted); cursor: not-allowed; }
-        textarea.af-in { min-height: 62px; resize: vertical; line-height: 1.45; }
-        .af-ro { padding: 7px 9px; border: 1px dashed var(--border); border-radius: 7px; font-size: 0.8rem; background: var(--bg); color: var(--text); white-space: pre-wrap; word-break: break-word; min-height: 32px; }
-        .af-ro.empty, .af-empty-val { color: var(--text-light); font-style: italic; }
+        /* Contrôles natifs : compléments (zone de texte, états désactivés) */
+        .af-row .form-textarea { min-height: 72px; resize: vertical; line-height: 1.45; font-family: inherit; }
+        .af-row .form-input:disabled, .af-row .form-select:disabled, .af-row .form-textarea:disabled,
+        .af-row .dates-inline input:disabled { background: var(--surface-2); color: var(--text-muted); cursor: not-allowed; }
+        .af-row .dates-inline input { width: auto; min-width: 128px; text-align: left; padding: 6px 8px; }
+        .af-row .dates-inline { padding: 0; }
+        .af-row .af-dot { cursor: default; }
+        .af-row .af-dot:hover { transform: none; }
+
+        /* Puces (mêmes composants que tags / assignés) */
+        .af-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+        .af-chips .remove { cursor: pointer; }
+        .af-msel .multi-select-dropdown { max-height: 220px; }
+        .af-free { cursor: default; }
+        .af-free input { width: 100%; height: auto; padding: 6px 8px; font-size: 0.78rem; }
+
+        /* Valeurs en lecture seule (formules, pièces jointes, droits restreints) */
+        .af-ro { padding: 8px 10px; border-radius: 8px; font-size: 0.82rem; background: var(--surface-2); color: var(--text); white-space: pre-wrap; word-break: break-word; min-height: 34px; }
+        .af-ro.empty { color: var(--text-light); font-style: italic; }
         .af-err { color: var(--danger); font-weight: 600; }
-        .af-switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.8rem; }
-        .af-switch input { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+        .af-switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; color: var(--text); min-height: 32px; }
+        .af-switch input { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; margin: 0; }
         .af-link { color: var(--primary); text-decoration: none; word-break: break-all; }
         .af-link:hover { text-decoration: underline; }
+        .af-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 5px; }
+        .prop-value.af-hint { margin-top: 0; }
+        .af-hint code { font-size: 0.7rem; }
 
-        .af-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
-        .af-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--primary-light); color: var(--primary); border-radius: 12px; padding: 3px 9px; font-size: 0.72rem; font-weight: 600; max-width: 100%; }
-        .af-chip .x { cursor: pointer; opacity: .6; font-weight: 700; }
-        .af-chip .x:hover { opacity: 1; }
-        .af-chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        /* Champs épinglés dans la liste de gauche : sur la ligne des dates, une seule
+           ligne tronquée pour respecter la hauteur fixe des rangées */
+        .af-rowchips { display: block; flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 0.62rem; line-height: 1.2; color: var(--text-muted); }
+        .task-info > .af-rowchips { margin-top: 1px; }
+        .af-rowchip + .af-rowchip::before { content: " · "; color: var(--text-light); }
+        .af-rowchip i { font-style: normal; font-weight: 600; color: var(--text-light); margin-right: 3px; }
 
-        .af-pick { position: relative; }
-        .af-pick-btn { width: 100%; text-align: left; padding: 6px 9px; border: 1px dashed var(--border); border-radius: 7px; background: var(--card-bg); font-size: 0.74rem; color: var(--text-muted); cursor: pointer; }
-        .af-pick-btn:hover { border-color: var(--primary); color: var(--primary); }
-        .af-pick-menu { display: none; position: absolute; z-index: 40; left: 0; right: 0; top: calc(100% + 4px); max-height: 220px; overflow: auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-lg); padding: 5px; }
-        .af-pick.open .af-pick-menu { display: block; }
-        .af-opt { display: flex; align-items: center; gap: 7px; padding: 6px 8px; border-radius: 6px; font-size: 0.76rem; cursor: pointer; }
-        .af-opt:hover { background: var(--bg); }
-        .af-opt input { accent-color: var(--primary); }
-        .af-note { font-size: 0.68rem; color: var(--text-light); margin-top: 5px; }
-        .af-hint { font-size: 0.72rem; color: var(--text-muted); background: var(--bg); border: 1px dashed var(--border); border-radius: 8px; padding: 9px 11px; }
-
-        /* Puces de champs dans la liste de gauche */
-        .af-rowchips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
-        .af-rowchip { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 1px 5px; font-size: 0.62rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .af-rowchip i { font-style: normal; font-weight: 700; color: var(--text-light); }
-
-        /* Sélecteur de colonnes (en-tête de la liste) */
+        /* Menu « ⚙ Champs » (en-tête de la liste) */
         .task-list-header { position: relative; }
         .task-list-header > span:nth-of-type(2) { margin-left: 5px; }
         .af-gear { margin-left: auto; border: 1px solid var(--border); background: var(--card-bg); border-radius: 6px; font-size: 0.64rem; font-weight: 700; padding: 2px 7px; cursor: pointer; color: var(--text-muted); }
         .af-gear:hover, .af-gear.on { border-color: var(--primary); color: var(--primary); }
-        .af-cols-pop { display: none; position: absolute; top: calc(100% + 4px); left: 8px; width: 258px; max-height: 340px; overflow: auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-lg); z-index: 70; padding: 9px; }
+        .af-cols-pop { display: none; position: absolute; top: calc(100% + 4px); left: 8px; width: 268px; max-height: 380px; overflow: auto; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-lg); z-index: 70; padding: 9px; }
         .af-cols-pop.open { display: block; }
-        .af-cols-pop h4 { font-size: 0.72rem; margin-bottom: 7px; color: var(--text); }
+        .af-cols-pop h4 { font-size: 0.72rem; margin: 0 0 7px; color: var(--text); }
         .af-cols-pop .af-note { margin-bottom: 7px; }
+        .af-note { font-size: 0.68rem; color: var(--text-light); }
+        .af-opt { display: flex; align-items: center; gap: 7px; padding: 6px 8px; border-radius: 6px; font-size: 0.76rem; cursor: pointer; }
+        .af-opt:hover { background: var(--bg); }
+        .af-opt input { accent-color: var(--primary); }
+        .af-ftype { font-size: 0.6rem; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--text-light); background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 1px 5px; }
+        .af-sep { border-top: 1px solid var(--border); margin: 9px 0; }
+        .af-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+        .af-mini { padding: 5px 9px; border: 1px solid var(--border); border-radius: 7px; background: var(--card-bg); font-size: 0.7rem; font-weight: 600; cursor: pointer; color: var(--text-muted); white-space: nowrap; }
+        .af-mini:hover { border-color: var(--primary); color: var(--primary); }

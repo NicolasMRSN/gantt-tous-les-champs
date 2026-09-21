@@ -29,16 +29,19 @@ Cette version lit les **métadonnées du document** (`_grist_Tables_column`) et 
 déduit, à l'ouverture, la liste réelle des colonnes : leur libellé, leur type,
 leurs choix, leurs formules et leur ordre. Elle ajoute :
 
-1. **Section « Tous les champs »** dans le panneau de détail : une ligne par
-   colonne, avec l'éditeur correspondant à son type et le libellé tel qu'il est
-   dans Grist. Filtre par nom, bascule « masquer les vides », bascule « champs en
-   plus » (masque ce que le panneau standard affiche déjà), bouton `↻` pour
-   relire les colonnes après en avoir ajouté une dans Grist.
-2. **Champs choisis dans la liste de gauche** : l'étoile `★` d'un champ (ou le
-   bouton `⚙ Champs` en haut de la liste) l'affiche sous le nom de chaque tâche
-   **et** dans l'info-bulle de la barre du Gantt. Le choix est mémorisé dans le
-   navigateur.
-3. **Export CSV** des tâches visibles avec *toutes* leurs colonnes (séparateur
+1. **Vos colonnes dans le panneau de détail, comme les champs d'origine.** Chaque
+   colonne de `Tasks` que le panneau n'édite pas déjà devient une ligne
+   supplémentaire de sa liste de propriétés — à la suite de Statut, Priorité,
+   Dates, Projet… — avec le **même balisage** (libellé, icône, contrôle) et
+   l'éditeur correspondant à son type. Rien ne distingue une colonne ajoutée dans
+   Grist d'un champ natif ; les champs déjà présents ne sont pas dupliqués.
+2. **Champs épinglés dans la liste de gauche** : l'étoile `★` à droite d'un libellé
+   (ou le menu `⚙ Champs` en haut de la liste) affiche sa valeur sur la ligne de
+   chaque tâche **et** dans l'info-bulle de la barre du Gantt. Le choix est
+   mémorisé dans le navigateur.
+3. **Menu `⚙ Champs`** : option « masquer les champs vides » du panneau, bouton
+   `↻` pour relire les colonnes après en avoir ajouté une dans Grist, et
+   **export CSV** des tâches visibles avec *toutes* leurs colonnes (séparateur
    `;`, BOM UTF-8 : s'ouvre directement dans Excel/LibreOffice).
 
 Tout le reste du widget — Gantt, dépendances, hiérarchie, filtres, drag & drop,
@@ -51,12 +54,12 @@ droits, mode démo — est **inchangé** : voir [« Comment c'est fait »](#comm
 | `Text` | champ texte, ou zone multiligne si le contenu est long ; les URL deviennent cliquables |
 | `Numeric`, `Int` | champ numérique |
 | `Bool` | case à cocher |
-| `Date` | sélecteur de date (converti en secondes UTC, comme Grist) |
+| `Date` | sélecteur de date, même habillage que la ligne « Dates » (secondes UTC, comme Grist) |
 | `DateTime` | sélecteur date + heure |
-| `Choice` | liste déroulante alimentée par les choix de la colonne, avec sa couleur |
-| `ChoiceList` | puces + menu à cocher, plus saisie libre d'une valeur |
+| `Choice` | pastille de couleur + liste déroulante, comme la ligne « Projet » |
+| `ChoiceList` | puces (comme les tags) + menu `+ Ajouter` à cocher, avec saisie libre d'une valeur |
 | `Ref:<Table>` | liste déroulante des enregistrements, libellé pris sur la colonne « SHOW COLUMN » |
-| `RefList:<Table>` | puces + menu à cocher |
+| `RefList:<Table>` | puces + menu `+ Lier`, comme la ligne « Assignés » |
 | `Attachments` | liste des pièces jointes avec lien de téléchargement (lecture seule) |
 | colonne **formule** | valeur affichée en lecture seule, avec la formule en info-bulle |
 | valeur en **erreur** | affichée telle quelle (`⚠ ZeroDivisionError`), jamais masquée |
@@ -103,28 +106,29 @@ Testé jusqu'à **137 colonnes** sur une tâche : rendu du panneau en ~250 ms.
 ### 3. Voir et modifier tous les champs
 
 1. Cliquez sur une tâche (dans la liste de gauche ou sur sa barre).
-2. Faites défiler le panneau jusqu'à **« Tous les champs »** — le compteur indique
-   le nombre de colonnes détectées.
+2. Dans le panneau de détail, vos colonnes suivent les champs d'origine (Statut,
+   Priorité, Dates, Projet, Parent, Couleur, Assignés, Temps & charge,
+   Progression), dans l'ordre des colonnes du document.
 3. Modifiez une valeur : l'écriture part dans Grist à la validation du champ
    (`Entrée`, ou en quittant le champ), l'indicateur « Enregistré » le confirme.
 
-Dans l'en-tête de la section :
+Dans le menu **`⚙ Champs`** (en haut de la liste de gauche) :
 
-| Bouton | Effet |
+| Commande | Effet |
 |---|---|
-| `Filtrer…` | filtre les champs par libellé, identifiant ou type |
-| `Masquer les vides` | ne montre que les champs renseignés pour cette tâche |
-| `Champs en plus` | masque les champs déjà édités plus haut dans le panneau |
-| `↻` | relit les colonnes (après avoir ajouté une colonne dans Grist) |
-| `⤓ CSV` | exporte les tâches visibles × toutes les colonnes |
+| cases à cocher | épingle une colonne dans la liste et l'info-bulle (voir 4) |
+| `Masquer les champs vides` | le panneau ne montre que les colonnes renseignées pour la tâche |
+| `↻ Relire les colonnes` | relit le schéma (après avoir ajouté une colonne dans Grist) |
+| `⤓ Export CSV` | exporte les tâches visibles × toutes les colonnes |
 
 ### 4. Afficher un champ dans la liste et l'info-bulle
 
-- Cliquez sur l'étoile **★** à droite du libellé d'un champ, **ou**
+- Cliquez sur l'étoile **★** à droite du libellé d'un champ dans le panneau, **ou**
 - Cliquez sur **`⚙ Champs`** en haut de la liste de gauche et cochez les colonnes.
 
-Les champs cochés apparaissent en petites puces sous le nom de chaque tâche et
-dans l'info-bulle au survol des barres du Gantt. Le choix est enregistré dans le
+Les champs épinglés apparaissent sur la ligne de chaque tâche (à côté des dates,
+tronqués si la place manque — le détail complet est en info-bulle) et dans
+l'info-bulle au survol des barres du Gantt. Le choix est enregistré dans le
 navigateur (`localStorage`), jamais dans le document : chacun a le sien.
 
 ### 5. Cas particuliers
@@ -135,8 +139,8 @@ navigateur (`localStorage`), jamais dans le document : chacun a le sien.
   en info-bulle sur le `ƒ`.
 - **Pièces jointes** : lecture seule, avec lien de téléchargement signé obtenu via
   `getAccessToken`. Le lien expire avec le jeton : rouvrez le panneau si besoin.
-- **Nouvelle tâche** : la section invite à créer la tâche d'abord — les colonnes
-  supplémentaires deviennent éditables dès que l'enregistrement existe.
+- **Nouvelle tâche** : une ligne « Autres champs » indique le nombre de colonnes
+  supplémentaires ; elles deviennent éditables dès que l'enregistrement existe.
 - **Métadonnées illisibles** (droits restreints, instance ancienne) : le widget se
   rabat sur les colonnes présentes dans les données et déduit les types des
   valeurs. Vous voyez toujours tous les champs, avec des éditeurs plus génériques.
