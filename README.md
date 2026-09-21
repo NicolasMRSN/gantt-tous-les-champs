@@ -5,7 +5,8 @@ pour afficher **toutes les colonnes de votre table `Tasks`** — quel que soit l
 nombre, quel que soit leur type — au lieu de la quinzaine de champs prévus par le
 panneau d'origine.
 
-**→ [Démonstration et mode opératoire](https://nicolasmrsn.github.io/gantt-tous-les-champs/)**
+**→ [Démonstration en ligne](https://nicolasmrsn.github.io/gantt-tous-les-champs/)**
+· **[Mode opératoire détaillé](MODE-OPERATOIRE.md)** (installation pas à pas, préparation de la table, utilisation, dépannage)
 
 | | |
 |---|---|
@@ -66,6 +67,10 @@ Testé jusqu'à **137 colonnes** sur une tâche : rendu du panneau en ~250 ms.
 ---
 
 ## Mode opératoire
+
+> Version courte. Le **[mode opératoire détaillé](MODE-OPERATOIRE.md)** couvre en plus
+> la liaison de sélection, la préparation d'une table `Tasks` existante, la mise à jour
+> du widget et un tableau de dépannage.
 
 ### 1. Ajouter le widget à votre document Grist
 
