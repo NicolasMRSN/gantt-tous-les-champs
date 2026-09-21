@@ -1,0 +1,15 @@
+[
+  {
+    "widgetId": "gantt-tous-les-champs",
+    "name": "Gantt — Tous les champs",
+    "url": "https://nicolasmrsn.github.io/gantt-tous-les-champs/widget/",
+    "published": true,
+    "accessLevel": "full",
+    "renderAfterReady": true,
+    "description": "Planning Gantt (dérivé de TaskFlow) affichant et éditant toutes les colonnes de la table Tasks, sans limite de nombre ni de type",
+    "authors": [
+      { "name": "NicolasMRSN", "url": "https://github.com/NicolasMRSN" },
+      { "name": "nic01asfr (widget d'origine)", "url": "https://github.com/nic01asFr" }
+    ]
+  }
+]

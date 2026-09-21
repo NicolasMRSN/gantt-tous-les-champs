@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gantt — Tous les champs · widget Grist</title>
+<meta name="description" content="Le widget Gantt de TaskFlow, modifié pour afficher et éditer toutes les colonnes de votre table Tasks — sans limite de nombre ni de type.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="Gantt — Tous les champs · widget Grist">
+<meta property="og:description" content="Le widget Gantt de TaskFlow, modifié pour afficher et éditer toutes les colonnes de votre table Tasks — sans limite de nombre ni de type.">
+<style>
+:root { --papier:#F5F7FB; --surface:#FFFFFF; --encre:#1F2738; --plume:#6C788F; --filet:#E7EBF2; --accent:#3E5DE7; --accent-doux:#EEF2FF; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --papier:#0F1626; --surface:#18223A; --encre:#DDE3EF; --plume:#8A97AB; --filet:#283145; --accent:#7B8CFF; --accent-doux:#1D2743; }
+}
+:root[data-theme="dark"] { --papier:#0F1626; --surface:#18223A; --encre:#DDE3EF; --plume:#8A97AB; --filet:#283145; --accent:#7B8CFF; --accent-doux:#1D2743; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--papier); color:var(--encre); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; }
+a { color: var(--accent); }
+main { max-width: 62rem; margin: 0 auto; padding: 3.5rem 1.5rem 5rem; }
+h1,h2,h3 { font-weight:500; line-height:1.15; text-wrap:balance; margin:0; }
+h1 { font-size: clamp(2rem,5.5vw,3.2rem); letter-spacing:-.01em; }
+h2 { font-size:1.45rem; margin:3.2rem 0 1rem; }
+h3 { font-size:1.02rem; margin:1.6rem 0 .4rem; }
+p { margin:0 0 1rem; color:var(--plume); }
+.eyebrow { font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--plume); margin-bottom:1.2rem; }
+.chapeau { font-size:1.14rem; line-height:1.55; color:var(--encre); max-width:44rem; margin:1rem 0 0; }
+.tags { display:flex; flex-wrap:wrap; gap:.4rem; margin:1.4rem 0 0; }
+.tag { font-size:.76rem; padding:.2rem .6rem; border-radius:999px; border:1px solid var(--filet); color:var(--plume); }
+code { font-family:ui-monospace,"SFMono-Regular",Menlo,monospace; font-size:.85em; background:var(--surface); border:1px solid var(--filet); border-radius:4px; padding:.1rem .35rem; overflow-wrap:anywhere; }
+
+.url-bloc { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; background:var(--surface); border:1px solid var(--filet); border-radius:12px; padding:.85rem 1rem; margin:2rem 0 .6rem; }
+.url-bloc code { background:transparent; border:0; font-size:.9rem; word-break:break-all; flex:1 1 20rem; padding:0; color:var(--encre); }
+.btn { display:inline-flex; align-items:center; gap:.4rem; padding:.6rem 1rem; border-radius:9px; font-size:.9rem; font-weight:600; text-decoration:none; border:1px solid var(--filet); background:var(--surface); color:var(--encre); cursor:pointer; font-family:inherit; }
+.btn:hover { border-color:var(--accent); color:var(--accent); }
+.btn.primaire { background:var(--accent); border-color:var(--accent); color:#fff; }
+.btn.primaire:hover { opacity:.9; color:#fff; }
+.boutons { display:flex; flex-wrap:wrap; gap:.7rem; margin:1.6rem 0 0; }
+.note { font-size:.85rem; color:var(--plume); margin:0; }
+
+.demo { border:1px solid var(--filet); border-radius:14px; overflow:hidden; background:var(--surface); box-shadow:0 12px 40px -24px rgba(31,39,56,.5); }
+.demo-barre { display:flex; align-items:center; gap:.5rem; padding:.55rem .9rem; border-bottom:1px solid var(--filet); font-size:.8rem; color:var(--plume); }
+.pastille { width:9px; height:9px; border-radius:50%; background:#4E9A5B; }
+.demo iframe { display:block; width:100%; height:660px; border:0; background:var(--papier); }
+@media (max-width:700px){ .demo iframe { height:520px; } }
+
+.grille { display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); margin:1.2rem 0; }
+.carte { background:var(--surface); border:1px solid var(--filet); border-radius:12px; padding:1rem 1.1rem; }
+.carte h3 { margin:0 0 .35rem; font-size:.98rem; color:var(--encre); }
+.carte p { margin:0; font-size:.9rem; }
+
+ol.etapes { counter-reset:e; list-style:none; padding:0; margin:1rem 0; }
+ol.etapes li { counter-increment:e; position:relative; padding:0 0 1.1rem 2.6rem; color:var(--plume); }
+ol.etapes li::before { content:counter(e); position:absolute; left:0; top:-.1rem; width:1.8rem; height:1.8rem; border-radius:50%; background:var(--accent-doux); color:var(--accent); font-size:.85rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+ol.etapes b { color:var(--encre); font-weight:600; }
+
+table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:.9rem; }
+th,td { text-align:left; padding:.55rem .6rem; border-bottom:1px solid var(--filet); vertical-align:top; }
+th { color:var(--encre); font-weight:600; font-size:.82rem; letter-spacing:.02em; }
+td { color:var(--plume); }
+td code { white-space:normal; }
+.table-enveloppe { overflow-x:auto; }
+
+.pied { max-width:62rem; margin:0 auto; padding:2rem 1.5rem 4rem; border-top:1px solid var(--filet); font-size:.85rem; color:var(--plume); }
+.copie-ok { font-size:.8rem; color:#4E9A5B; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Widget Grist · dérivé de TaskFlow</p>
+  <h1>Gantt — tous les champs</h1>
+  <p class="chapeau">Le planning de TaskFlow, mais le panneau de détail ne montre plus
+  une liste de champs décidée à l'avance : il montre <b>vos colonnes</b>, toutes,
+  telles qu'elles sont dans votre table <code>Tasks</code> — quel que soit leur
+  nombre, quel que soit leur type.</p>
+
+  <div class="tags">
+    <span class="tag">Aucune colonne codée en dur</span>
+    <span class="tag">13 types Grist</span>
+    <span class="tag">Colonnes formule</span>
+    <span class="tag">Pièces jointes</span>
+    <span class="tag">Export CSV</span>
+    <span class="tag">Fichier statique</span>
+  </div>
+
+  <div class="url-bloc">
+    <code id="url">https://nicolasmrsn.github.io/gantt-tous-les-champs/widget/</code>
+    <button class="btn" id="copier">Copier l'URL</button>
+    <span class="copie-ok" id="copieOk" hidden>copié</span>
+  </div>
+  <p class="note">À coller dans Grist : <b>Ajouter un widget → Custom</b>, table
+  <code>Tasks</code>, accès <b>complet au document</b>.</p>
+
+  <div class="boutons">
+    <a class="btn primaire" href="widget/">Ouvrir la démonstration</a>
+    <a class="btn" href="https://github.com/NicolasMRSN/gantt-tous-les-champs">Code source</a>
+    <a class="btn" href="https://github.com/nic01asFr/Widgets-Grist">Widget d'origine</a>
+  </div>
+
+  <h2>Démonstration</h2>
+  <p>Ci-dessous, le widget hors de Grist : il se rabat sur un jeu d'exemple auquel on a
+  ajouté des colonnes de tous types (texte long, nombre, booléen, choix, liste de choix,
+  référence, date, date-heure, lien, colonne formule). <b>Cliquez sur une tâche</b>, puis
+  faites défiler le panneau jusqu'à « Tous les champs ».</p>
+  <div class="demo">
+    <div class="demo-barre"><span class="pastille"></span> démonstration — les modifications restent dans votre navigateur</div>
+    <iframe src="widget/" title="Démonstration du widget Gantt — tous les champs" loading="lazy"></iframe>
+  </div>
+
+  <h2>Ce que ça ajoute</h2>
+  <div class="grille">
+    <div class="carte">
+      <h3>Section « Tous les champs »</h3>
+      <p>Une ligne par colonne réellement présente dans <code>Tasks</code>, avec son
+      libellé Grist, son type, et l'éditeur qui va avec. Filtre par nom, masquage des
+      champs vides, masquage des champs déjà édités plus haut.</p>
+    </div>
+    <div class="carte">
+      <h3>Champs dans la liste</h3>
+      <p>L'étoile ★ d'un champ — ou le bouton <b>⚙ Champs</b> au-dessus de la liste —
+      l'affiche en puce sous le nom de chaque tâche et dans l'info-bulle de sa barre.</p>
+    </div>
+    <div class="carte">
+      <h3>Export CSV complet</h3>
+      <p>Les tâches visibles × toutes leurs colonnes, séparateur <code>;</code> et
+      BOM UTF-8 : le fichier s'ouvre directement dans Excel ou LibreOffice.</p>
+    </div>
+    <div class="carte">
+      <h3>Colonnes ajoutées en cours de route</h3>
+      <p>Une colonne créée dans Grist pendant que le widget est ouvert ? Le bouton
+      <code>↻</code> relit le schéma. Aucune configuration à tenir à jour.</p>
+    </div>
+  </div>
+
+  <h2>Mode opératoire</h2>
+  <ol class="etapes">
+    <li><b>Ajouter le widget.</b> Dans votre document : <i>Ajouter un widget</i> →
+      <i>Custom</i>, source de données <code>Tasks</code>. Collez l'URL ci-dessus dans le
+      champ <i>URL</i> du panneau de droite.</li>
+    <li><b>Donner l'accès complet au document.</b> <i>Access level</i> →
+      <i>Full document access</i>. Sans lui, Grist n'autorise ni la lecture des
+      métadonnées de colonnes, ni l'écriture dans une colonne inconnue d'avance.</li>
+    <li><b>Laisser la table telle qu'elle est.</b> Les colonnes du schéma TaskFlow
+      manquantes sont ajoutées ; vos colonnes à vous sont conservées et détectées.
+      Le Gantt a seulement besoin de <code>titre</code>, <code>dateDebut</code> et
+      <code>dateEcheance</code> pour dessiner les barres.</li>
+    <li><b>Ouvrir une tâche</b>, faire défiler jusqu'à <i>Tous les champs</i>, modifier.
+      L'écriture part dans Grist quand le champ est validé ou quitté.</li>
+    <li><b>Épingler ce qui compte</b> avec ★ pour le voir dans la liste et l'info-bulle
+      sans ouvrir le panneau.</li>
+  </ol>
+  <p class="note">Instance auto-hébergée : pour retrouver le widget dans le sélecteur
+  « Custom Widget », démarrez Grist avec
+  <code>GRIST_WIDGET_LIST_URL=https://nicolasmrsn.github.io/gantt-tous-les-champs/manifest.json</code>.</p>
+
+  <h2>Types pris en charge</h2>
+  <div class="table-enveloppe">
+  <table>
+    <tr><th>Type Grist</th><th>Dans le panneau</th></tr>
+    <tr><td><code>Text</code></td><td>champ texte, zone multiligne si le contenu est long, URL cliquable</td></tr>
+    <tr><td><code>Numeric</code>, <code>Int</code></td><td>champ numérique</td></tr>
+    <tr><td><code>Bool</code></td><td>case à cocher</td></tr>
+    <tr><td><code>Date</code></td><td>sélecteur de date (secondes UTC, comme Grist)</td></tr>
+    <tr><td><code>DateTime</code></td><td>sélecteur date + heure</td></tr>
+    <tr><td><code>Choice</code></td><td>liste déroulante des choix de la colonne, avec leur couleur</td></tr>
+    <tr><td><code>ChoiceList</code></td><td>puces + menu à cocher, saisie libre possible</td></tr>
+    <tr><td><code>Ref:&lt;Table&gt;</code></td><td>liste des enregistrements, libellé pris sur la colonne « SHOW COLUMN »</td></tr>
+    <tr><td><code>RefList:&lt;Table&gt;</code></td><td>puces + menu à cocher</td></tr>
+    <tr><td><code>Attachments</code></td><td>liste des pièces jointes avec lien de téléchargement (lecture seule)</td></tr>
+    <tr><td>colonne <b>formule</b></td><td>valeur en lecture seule, formule en info-bulle sur le <code>ƒ</code></td></tr>
+    <tr><td>valeur en <b>erreur</b></td><td>affichée telle quelle (<code>⚠ ZeroDivisionError</code>), jamais masquée</td></tr>
+    <tr><td><b>tout autre type</b></td><td>valeur brute éditable en JSON — aucun type ne bloque l'affichage</td></tr>
+  </table>
+  </div>
+
+  <h2>Comment c'est fait</h2>
+  <p>La modification est <b>purement additive</b> : aucune fonction du widget d'origine
+  n'est réécrite. Un bloc CSS et un bloc JavaScript sont insérés dans le fichier amont,
+  et le module s'installe en enveloppant quatre fonctions existantes
+  (<code>renderPanel</code>, <code>renderTaskList</code>, <code>loadAllData</code>,
+  <code>useDemoMode</code>). Si une étape échoue — droits restreints, métadonnées
+  illisibles, version de Grist différente — le widget continue de fonctionner comme
+  avant, et se rabat sur les colonnes lues dans les données.</p>
+  <p>Le dépôt contient le fichier amont tel quel, les deux blocs ajoutés, et le script
+  de construction : <code>python3 src/build.py</code> régénère le widget. Un
+  <code>diff</code> entre le widget et l'amont ne montre que ces deux blocs.</p>
+</main>
+
+<footer class="pied">
+  <p>Widget d'origine : <a href="https://github.com/nic01asFr/Widgets-Grist">TaskFlow / Gantt</a>
+  — nic01asFr, licence MIT. Cette version dérivée : licence MIT également.
+  Grist est une marque de Grist Labs ; ce projet n'est pas affilié.</p>
+</footer>
+
+<script>
+document.getElementById('copier').addEventListener('click', async () => {
+  const t = document.getElementById('url').textContent.trim();
+  try { await navigator.clipboard.writeText(t); }
+  catch (e) { const s = document.createElement('textarea'); s.value = t; document.body.appendChild(s); s.select(); document.execCommand('copy'); s.remove(); }
+  const ok = document.getElementById('copieOk');
+  ok.hidden = false; setTimeout(() => { ok.hidden = true; }, 1800);
+});
+</script>
+</body>
+</html>
